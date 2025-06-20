@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}TodoList{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">Todo List</h1>
+    
+    <!-- Add Task Form -->
+    <form action="{{ url_for('add_task') }}" method="POST" class="mb-6">
+        <div class="flex gap-2">
+            <input type="text" name="task" 
+                   class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                   placeholder="Masukkan task baru..." required>
+            <button type="submit" 
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                Tambah
+            </button>
+        </div>
+    </form>
+    
+    <!-- Task List -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <ul>
+            {% for task in tasks %}
+                <li class="border-b border-gray-200 last:border-b-0">
+                    <div class="flex items-center justify-between p-4 hover:bg-gray-50">
+                        <span class="{% if task.done %}line-through text-gray-400{% endif %}">
+                            {{ task.task }}
+                        </span>
+                        <div class="flex gap-2">
+                            <a href="{{ url_for('complete_task', task_id=task.id) }}" 
+                               class="px-3 py-1 rounded 
+                               {% if task.done %}bg-gray-200 text-gray-700 hover:bg-gray-300
+                               {% else %}bg-green-200 text-green-700 hover:bg-green-300{% endif %}">
+                                {% if task.done %}Batal{% else %}Selesai{% endif %}
+                            </a>
+                            <a href="{{ url_for('delete_task', task_id=task.id) }}" 
+                               class="px-3 py-1 bg-red-200 text-red-700 rounded hover:bg-red-300">
+                                Hapus
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            {% else %}
+                <li class="p-4 text-center text-gray-500">
+                    Tidak ada task. Tambahkan task baru!
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
